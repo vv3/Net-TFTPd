@@ -1,0 +1,175 @@
+<HTML>
+<HEAD>
+<TITLE>Net::TFTPd - Perl extension for Trivial File Transfer Protocol Server</TITLE>
+<LINK REV="made" HREF="mailto:">
+</HEAD>
+
+<BODY>
+<TABLE BORDER=0 CELLPADDING=0 CELLSPACING=0 WIDTH=100%>
+<TR><TD CLASS=block VALIGN=MIDDLE WIDTH=100% BGCOLOR="#cccccc">
+<FONT SIZE=+1><STRONG><P CLASS=block>&nbsp;Net::TFTPd - Perl extension for Trivial File Transfer Protocol Server</P></STRONG></FONT>
+</TD></TR>
+</TABLE>
+
+<A NAME="__index__"></A>
+<!-- INDEX BEGIN -->
+
+<UL>
+
+	<LI><A HREF="#name">NAME</A></LI>
+	<LI><A HREF="#synopsis">SYNOPSIS</A></LI>
+	<LI><A HREF="#description">DESCRIPTION</A></LI>
+	<LI><A HREF="#export">EXPORT</A></LI>
+	<UL>
+
+		<LI><A HREF="#%opcodes">%OPCODES</A></LI>
+	</UL>
+
+	<LI><A HREF="#listener constructor">Listener constructor</A></LI>
+	<UL>
+
+		<LI><A HREF="#new()"><CODE>new()</CODE></A></LI>
+		<LI><A HREF="#callback">CallBack</A></LI>
+	</UL>
+
+	<LI><A HREF="#listener methods">Listener methods</A></LI>
+	<UL>
+
+		<LI><A HREF="#waitrq()"><CODE>waitRQ()</CODE></A></LI>
+	</UL>
+
+	<LI><A HREF="#request methods">Request methods</A></LI>
+	<UL>
+
+		<LI><A HREF="#processrq()"><CODE>processRQ()</CODE></A></LI>
+	</UL>
+
+	<LI><A HREF="#author">AUTHOR</A></LI>
+	<LI><A HREF="#see also">SEE ALSO</A></LI>
+</UL>
+<!-- INDEX END -->
+
+<HR>
+<P>
+<H1><A NAME="name">NAME</A></H1>
+<P>Net::TFTPd - Perl extension for Trivial File Transfer Protocol Server</P>
+<P>
+<HR>
+<H1><A NAME="synopsis">SYNOPSIS</A></H1>
+<PRE>
+  use strict;
+  use Net::TFTPd;</PRE>
+<PRE>
+  my $tftpdOBJ = Net::TFTPd-&gt;new('RootDir' =&gt; 'path/to/files')
+    or die &quot;Error creating TFTPd listener: %s&quot;, Net::TFTPd-&gt;error;</PRE>
+<PRE>
+  my $tftpRQ = $tftpdOBJ-&gt;waitRQ(10)
+    or die &quot;Error waiting for TFTP request: %s&quot;, Net::TFTPd-&gt;error;</PRE>
+<PRE>
+  $tftpRQ-&gt;processRQ()
+    or die &quot;Error processing TFTP request: %s&quot;, Net::TFTPd-&gt;error;</PRE>
+<P>
+<HR>
+<H1><A NAME="description">DESCRIPTION</A></H1>
+<P><CODE>Net::TFTPd</CODE> is a class implementing a simple <EM>Trivial File Transfer Protocol</EM> server in Perl as described in RFC1350.</P>
+<P><CODE>Net::TFTPd</CODE> also supports the TFTP Option Extension (as described in RFC2347), with the following options:</P>
+<PRE>
+  RFC2348 TFTP Blocksize Option
+  RFC2349 TFTP Timeout Interval and Transfer Size Options</PRE>
+<P>
+<HR>
+<H1><A NAME="export">EXPORT</A></H1>
+<P>None by default.</P>
+<P>
+<H2><A NAME="%opcodes">%OPCODES</A></H2>
+<P>The %OPCODES tag exports the <EM>%OPCODES</EM> hash:</P>
+<PRE>
+  %OPCODES = (
+    1       =&gt; 'RRQ',
+    2       =&gt; 'WRQ',
+    3       =&gt; 'DATA',
+    4       =&gt; 'ACK',
+    5       =&gt; 'ERROR',
+    6       =&gt; 'OACK',
+    'RRQ'   =&gt; 1,
+    'WRQ'   =&gt; 2,
+    'DATA'  =&gt; 3,
+    'ACK'   =&gt; 4,
+    'ERROR' =&gt; 5,
+    'OACK'  =&gt; 6
+  );</PRE>
+<P>
+<HR>
+<H1><A NAME="listener constructor">Listener constructor</A></H1>
+<P>
+<H2><A NAME="new()"><CODE>new()</CODE></A></H2>
+<PRE>
+  $listener = new Net::TFTPd( ['RootDir' =&gt; 'path/to/files' | 'FileName' =&gt; 'path/to/file'] [, OPTIONS ] );</PRE>
+<P>or</P>
+<PRE>
+  $listener = Net::TFTPd-&gt;new( ['RootDir' =&gt; 'path/to/files' | 'FileName' =&gt; 'path/to/file'] [, OPTIONS ] );</PRE>
+<P>Create a new Net::TFTPd object where 'path/to/files' is the default path to file repository
+or 'path/to/file' is the single file allowed for download, and OPTIONS are the default server
+options.</P>
+<P>Valid options are:</P>
+<PRE>
+  Option     Description                                        Default
+  ------     -----------                                        -------
+  LocalAddr  Interface to bind to (for multi-homed server)          any
+  LocalPort  Port to bind server to                                  69
+  Timeout    Timeout in seconds to wait for a request                10
+  ACKtimeout Timeout in seconds to wait for an ACK packet             4
+  ACKretries Maximum number of retries waiting for ACK                4
+  Readable   Clients are allowed to read files                        1
+  Writable   Clients are allowed to write files                       0
+  BlkSize    Minimum blocksize to negotiate for transfers           512
+  CallBack   Reference to code executed for each transferred block    -
+  Debug      Activates debug mode (verbose)                           0</PRE>
+<P>
+<H2><A NAME="callback">CallBack</A></H2>
+<P>The CallBack code is called by processRQ method for each tranferred block.</P>
+<P>The code receives (into @_ array) a reference to internal <EM>$request</EM> object.</P>
+<P>Example:</P>
+<PRE>
+  sub callback
+  {
+    my $req = shift;
+    printf &quot;block: %u\/%u\n&quot;, $req-&gt;{'_REQUEST_'}{'LASTACK'}, $req-&gt;{'_REQUEST_'}{'LASTBLK'};
+  }</PRE>
+<PRE>
+  my $tftpdOBJ = Net::TFTPd-&gt;new('RootDir' =&gt; 'c:/temp', 'Timeout' =&gt; 60, 'CallBack' =&gt; \&amp;callback) or die Net::TFTPd-&gt;error;</PRE>
+<P>
+<HR>
+<H1><A NAME="listener methods">Listener methods</A></H1>
+<P>
+<H2><A NAME="waitrq()"><CODE>waitRQ()</CODE></A></H2>
+<PRE>
+  $request = $listener-&gt;waitRQ([Timeout]);</PRE>
+<P>Waits for a client request (RRQ or WRQ) and returns a <EM>$request</EM> object or <EM>undef</EM> if timed out.</P>
+<P>If <EM>Timeout</EM> is missing, the timeout defined for <EM>$listener</EM> object is used instead.</P>
+<P>When the method returns, the program should <CODE>fork()</CODE> and process the request invoking <CODE>processRQ()</CODE> while the parent process should re-start waiting for another request.</P>
+<P>
+<HR>
+<H1><A NAME="request methods">Request methods</A></H1>
+<P>
+<H2><A NAME="processrq()"><CODE>processRQ()</CODE></A></H2>
+<PRE>
+  $ret = $request-&gt;processRQ();</PRE>
+<P>Processes a request and returns 1 if success, undef if error.</P>
+<P>
+<HR>
+<H1><A NAME="author">AUTHOR</A></H1>
+<P>Luigino Masarati, &lt;<A HREF="mailto:lmasarati@hotmail.com">lmasarati@hotmail.com</A>&gt;</P>
+<P>
+<HR>
+<H1><A NAME="see also">SEE ALSO</A></H1>
+<P><A HREF="/Net/TFTP.html">the Net::TFTP manpage</A>.</P>
+<TABLE BORDER=0 CELLPADDING=0 CELLSPACING=0 WIDTH=100%>
+<TR><TD CLASS=block VALIGN=MIDDLE WIDTH=100% BGCOLOR="#cccccc">
+<FONT SIZE=+1><STRONG><P CLASS=block>&nbsp;Net::TFTPd - Perl extension for Trivial File Transfer Protocol Server</P></STRONG></FONT>
+</TD></TR>
+</TABLE>
+
+</BODY>
+
+</HTML>

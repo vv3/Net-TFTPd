@@ -1,0 +1,10 @@
+Revision history for Perl extension Net::TFTPD.
+
+0.01  Mon Oct 21 11:06:19 2002
+	- original version; created by h2xs 1.21 with options
+		-AX -n Net::TFTPd
+
+0.02  Mon Aug 23 17:10:12 2004
+	- project revision, added examples and POD documentation
+	  first public release
+
