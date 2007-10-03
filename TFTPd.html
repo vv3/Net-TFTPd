@@ -1,118 +1,130 @@
-<HTML>
-<HEAD>
-<TITLE>Net::TFTPd - Perl extension for Trivial File Transfer Protocol Server</TITLE>
-<LINK REV="made" HREF="mailto:">
-</HEAD>
+<?xml version="1.0" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Net::TFTPd - Perl extension for Trivial File Transfer Protocol Server</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<link rev="made" href="mailto:" />
+</head>
 
-<BODY>
-<TABLE BORDER=0 CELLPADDING=0 CELLSPACING=0 WIDTH=100%>
-<TR><TD CLASS=block VALIGN=MIDDLE WIDTH=100% BGCOLOR="#cccccc">
-<FONT SIZE=+1><STRONG><P CLASS=block>&nbsp;Net::TFTPd - Perl extension for Trivial File Transfer Protocol Server</P></STRONG></FONT>
-</TD></TR>
-</TABLE>
+<body style="background-color: white">
 
-<A NAME="__index__"></A>
+<p><a name="__index__"></a></p>
 <!-- INDEX BEGIN -->
 
-<UL>
+<ul>
 
-	<LI><A HREF="#name">NAME</A></LI>
-	<LI><A HREF="#synopsis">SYNOPSIS</A></LI>
-	<LI><A HREF="#description">DESCRIPTION</A></LI>
-	<LI><A HREF="#export">EXPORT</A></LI>
-	<UL>
+	<li><a href="#name">NAME</a></li>
+	<li><a href="#synopsis">SYNOPSIS</a></li>
+	<li><a href="#description">DESCRIPTION</a></li>
+	<li><a href="#export">EXPORT</a></li>
+	<ul>
 
-		<LI><A HREF="#%opcodes">%OPCODES</A></LI>
-	</UL>
+		<li><a href="#_opcodes">%OPCODES</a></li>
+	</ul>
 
-	<LI><A HREF="#listener constructor">Listener constructor</A></LI>
-	<UL>
+	<li><a href="#listener_constructor">Listener constructor</a></li>
+	<ul>
 
-		<LI><A HREF="#new()"><CODE>new()</CODE></A></LI>
-		<LI><A HREF="#callback">CallBack</A></LI>
-	</UL>
+		<li><a href="#new__"><code>new()</code></a></li>
+		<li><a href="#callback">CallBack</a></li>
+	</ul>
 
-	<LI><A HREF="#listener methods">Listener methods</A></LI>
-	<UL>
+	<li><a href="#listener_methods">Listener methods</a></li>
+	<ul>
 
-		<LI><A HREF="#waitrq()"><CODE>waitRQ()</CODE></A></LI>
-	</UL>
+		<li><a href="#waitrq__"><code>waitRQ()</code></a></li>
+	</ul>
 
-	<LI><A HREF="#request methods">Request methods</A></LI>
-	<UL>
+	<li><a href="#request_methods">Request methods</a></li>
+	<ul>
 
-		<LI><A HREF="#processrq()"><CODE>processRQ()</CODE></A></LI>
-	</UL>
+		<li><a href="#processrq__"><code>processRQ()</code></a></li>
+	</ul>
 
-	<LI><A HREF="#author">AUTHOR</A></LI>
-	<LI><A HREF="#see also">SEE ALSO</A></LI>
-</UL>
+	<li><a href="#author">AUTHOR</a></li>
+	<li><a href="#see_also">SEE ALSO</a></li>
+</ul>
 <!-- INDEX END -->
 
-<HR>
-<P>
-<H1><A NAME="name">NAME</A></H1>
-<P>Net::TFTPd - Perl extension for Trivial File Transfer Protocol Server</P>
-<P>
-<HR>
-<H1><A NAME="synopsis">SYNOPSIS</A></H1>
-<PRE>
-  use strict;
-  use Net::TFTPd;</PRE>
-<PRE>
-  my $tftpdOBJ = Net::TFTPd-&gt;new('RootDir' =&gt; 'path/to/files')
-    or die &quot;Error creating TFTPd listener: %s&quot;, Net::TFTPd-&gt;error;</PRE>
-<PRE>
-  my $tftpRQ = $tftpdOBJ-&gt;waitRQ(10)
-    or die &quot;Error waiting for TFTP request: %s&quot;, Net::TFTPd-&gt;error;</PRE>
-<PRE>
-  $tftpRQ-&gt;processRQ()
-    or die &quot;Error processing TFTP request: %s&quot;, Net::TFTPd-&gt;error;</PRE>
-<P>
-<HR>
-<H1><A NAME="description">DESCRIPTION</A></H1>
-<P><CODE>Net::TFTPd</CODE> is a class implementing a simple <EM>Trivial File Transfer Protocol</EM> server in Perl as described in RFC1350.</P>
-<P><CODE>Net::TFTPd</CODE> also supports the TFTP Option Extension (as described in RFC2347), with the following options:</P>
-<PRE>
+<hr />
+<p>
+</p>
+<h1><a name="name">NAME</a></h1>
+<p>Net::TFTPd - Perl extension for Trivial File Transfer Protocol Server</p>
+<p>
+</p>
+<hr />
+<h1><a name="synopsis">SYNOPSIS</a></h1>
+<pre>
+  <span class="keyword">use</span> <span class="variable">strict</span><span class="operator">;</span>
+  <span class="keyword">use</span> <span class="variable">Net::TFTPd</span><span class="operator">;</span>
+</pre>
+<pre>
+  <span class="keyword">my</span> <span class="variable">$tftpdOBJ</span> <span class="operator">=</span> <span class="variable">Net::TFTPd</span><span class="operator">-&gt;</span><span class="variable">new</span><span class="operator">(</span><span class="string">'RootDir'</span> <span class="operator">=&gt;</span> <span class="string">'path/to/files'</span><span class="operator">)</span>
+    <span class="keyword">or</span> <span class="keyword">die</span> <span class="string">"Error creating TFTPd listener: %s"</span><span class="operator">,</span> <span class="variable">Net::TFTPd</span><span class="operator">-&gt;</span><span class="variable">error</span><span class="operator">;</span>
+</pre>
+<pre>
+  <span class="keyword">my</span> <span class="variable">$tftpRQ</span> <span class="operator">=</span> <span class="variable">$tftpdOBJ</span><span class="operator">-&gt;</span><span class="variable">waitRQ</span><span class="operator">(</span><span class="number">10</span><span class="operator">)</span>
+    <span class="keyword">or</span> <span class="keyword">die</span> <span class="string">"Error waiting for TFTP request: %s"</span><span class="operator">,</span> <span class="variable">Net::TFTPd</span><span class="operator">-&gt;</span><span class="variable">error</span><span class="operator">;</span>
+</pre>
+<pre>
+  <span class="variable">$tftpRQ</span><span class="operator">-&gt;</span><span class="variable">processRQ</span><span class="operator">()</span>
+    <span class="keyword">or</span> <span class="keyword">die</span> <span class="string">"Error processing TFTP request: %s"</span><span class="operator">,</span> <span class="variable">Net::TFTPd</span><span class="operator">-&gt;</span><span class="variable">error</span><span class="operator">;</span>
+</pre>
+<p>
+</p>
+<hr />
+<h1><a name="description">DESCRIPTION</a></h1>
+<p><code>Net::TFTPd</code> is a class implementing a simple <em>Trivial File Transfer Protocol</em> server in Perl as described in RFC1350.</p>
+<p><code>Net::TFTPd</code> also supports the TFTP Option Extension (as described in RFC2347), with the following options:</p>
+<pre>
   RFC2348 TFTP Blocksize Option
-  RFC2349 TFTP Timeout Interval and Transfer Size Options</PRE>
-<P>
-<HR>
-<H1><A NAME="export">EXPORT</A></H1>
-<P>None by default.</P>
-<P>
-<H2><A NAME="%opcodes">%OPCODES</A></H2>
-<P>The %OPCODES tag exports the <EM>%OPCODES</EM> hash:</P>
-<PRE>
-  %OPCODES = (
-    1       =&gt; 'RRQ',
-    2       =&gt; 'WRQ',
-    3       =&gt; 'DATA',
-    4       =&gt; 'ACK',
-    5       =&gt; 'ERROR',
-    6       =&gt; 'OACK',
-    'RRQ'   =&gt; 1,
-    'WRQ'   =&gt; 2,
-    'DATA'  =&gt; 3,
-    'ACK'   =&gt; 4,
-    'ERROR' =&gt; 5,
-    'OACK'  =&gt; 6
-  );</PRE>
-<P>
-<HR>
-<H1><A NAME="listener constructor">Listener constructor</A></H1>
-<P>
-<H2><A NAME="new()"><CODE>new()</CODE></A></H2>
-<PRE>
-  $listener = new Net::TFTPd( ['RootDir' =&gt; 'path/to/files' | 'FileName' =&gt; 'path/to/file'] [, OPTIONS ] );</PRE>
-<P>or</P>
-<PRE>
-  $listener = Net::TFTPd-&gt;new( ['RootDir' =&gt; 'path/to/files' | 'FileName' =&gt; 'path/to/file'] [, OPTIONS ] );</PRE>
-<P>Create a new Net::TFTPd object where 'path/to/files' is the default path to file repository
+  RFC2349 TFTP Timeout Interval and Transfer Size Options</pre>
+<p>
+</p>
+<hr />
+<h1><a name="export">EXPORT</a></h1>
+<p>None by default.</p>
+<p>
+</p>
+<h2><a name="_opcodes">%OPCODES</a></h2>
+<p>The %OPCODES tag exports the <em>%OPCODES</em> hash:</p>
+<pre>
+  <span class="variable">%OPCODES</span> <span class="operator">=</span> <span class="operator">(</span>
+    <span class="number">1</span>       <span class="operator">=&gt;</span> <span class="string">'RRQ'</span><span class="operator">,</span>
+    <span class="number">2</span>       <span class="operator">=&gt;</span> <span class="string">'WRQ'</span><span class="operator">,</span>
+    <span class="number">3</span>       <span class="operator">=&gt;</span> <span class="string">'DATA'</span><span class="operator">,</span>
+    <span class="number">4</span>       <span class="operator">=&gt;</span> <span class="string">'ACK'</span><span class="operator">,</span>
+    <span class="number">5</span>       <span class="operator">=&gt;</span> <span class="string">'ERROR'</span><span class="operator">,</span>
+    <span class="number">6</span>       <span class="operator">=&gt;</span> <span class="string">'OACK'</span><span class="operator">,</span>
+    <span class="string">'RRQ'</span>   <span class="operator">=&gt;</span> <span class="number">1</span><span class="operator">,</span>
+    <span class="string">'WRQ'</span>   <span class="operator">=&gt;</span> <span class="number">2</span><span class="operator">,</span>
+    <span class="string">'DATA'</span>  <span class="operator">=&gt;</span> <span class="number">3</span><span class="operator">,</span>
+    <span class="string">'ACK'</span>   <span class="operator">=&gt;</span> <span class="number">4</span><span class="operator">,</span>
+    <span class="string">'ERROR'</span> <span class="operator">=&gt;</span> <span class="number">5</span><span class="operator">,</span>
+    <span class="string">'OACK'</span>  <span class="operator">=&gt;</span> <span class="number">6</span>
+  <span class="operator">);</span>
+</pre>
+<p>
+</p>
+<hr />
+<h1><a name="listener_constructor">Listener constructor</a></h1>
+<p>
+</p>
+<h2><a name="new__"><code>new()</code></a></h2>
+<pre>
+  <span class="variable">$listener</span> <span class="operator">=</span> <span class="variable">new</span> <span class="variable">Net::TFTPd</span><span class="operator">(</span> <span class="operator">[</span><span class="string">'RootDir'</span> <span class="operator">=&gt;</span> <span class="string">'path/to/files'</span> <span class="operator">|</span> <span class="string">'FileName'</span> <span class="operator">=&gt;</span> <span class="string">'path/to/file'</span><span class="operator">]</span> <span class="operator">[</span><span class="operator">,</span> <span class="variable">OPTIONS</span> <span class="operator">]</span> <span class="operator">);</span>
+</pre>
+<p>or</p>
+<pre>
+  <span class="variable">$listener</span> <span class="operator">=</span> <span class="variable">Net::TFTPd</span><span class="operator">-&gt;</span><span class="variable">new</span><span class="operator">(</span> <span class="operator">[</span><span class="string">'RootDir'</span> <span class="operator">=&gt;</span> <span class="string">'path/to/files'</span> <span class="operator">|</span> <span class="string">'FileName'</span> <span class="operator">=&gt;</span> <span class="string">'path/to/file'</span><span class="operator">]</span> <span class="operator">[</span><span class="operator">,</span> <span class="variable">OPTIONS</span> <span class="operator">]</span> <span class="operator">);</span>
+</pre>
+<p>Create a new Net::TFTPd object where 'path/to/files' is the default path to file repository
 or 'path/to/file' is the single file allowed for download, and OPTIONS are the default server
-options.</P>
-<P>Valid options are:</P>
-<PRE>
+options.</p>
+<p>Valid options are:</p>
+<pre>
   Option     Description                                        Default
   ------     -----------                                        -------
   LocalAddr  Interface to bind to (for multi-homed server)          any
@@ -124,52 +136,58 @@ options.</P>
   Writable   Clients are allowed to write files                       0
   BlkSize    Minimum blocksize to negotiate for transfers           512
   CallBack   Reference to code executed for each transferred block    -
-  Debug      Activates debug mode (verbose)                           0</PRE>
-<P>
-<H2><A NAME="callback">CallBack</A></H2>
-<P>The CallBack code is called by processRQ method for each tranferred block.</P>
-<P>The code receives (into @_ array) a reference to internal <EM>$request</EM> object.</P>
-<P>Example:</P>
-<PRE>
-  sub callback
-  {
-    my $req = shift;
-    printf &quot;block: %u\/%u\n&quot;, $req-&gt;{'_REQUEST_'}{'LASTACK'}, $req-&gt;{'_REQUEST_'}{'LASTBLK'};
-  }</PRE>
-<PRE>
-  my $tftpdOBJ = Net::TFTPd-&gt;new('RootDir' =&gt; 'c:/temp', 'Timeout' =&gt; 60, 'CallBack' =&gt; \&amp;callback) or die Net::TFTPd-&gt;error;</PRE>
-<P>
-<HR>
-<H1><A NAME="listener methods">Listener methods</A></H1>
-<P>
-<H2><A NAME="waitrq()"><CODE>waitRQ()</CODE></A></H2>
-<PRE>
-  $request = $listener-&gt;waitRQ([Timeout]);</PRE>
-<P>Waits for a client request (RRQ or WRQ) and returns a <EM>$request</EM> object or <EM>undef</EM> if timed out.</P>
-<P>If <EM>Timeout</EM> is missing, the timeout defined for <EM>$listener</EM> object is used instead.</P>
-<P>When the method returns, the program should <CODE>fork()</CODE> and process the request invoking <CODE>processRQ()</CODE> while the parent process should re-start waiting for another request.</P>
-<P>
-<HR>
-<H1><A NAME="request methods">Request methods</A></H1>
-<P>
-<H2><A NAME="processrq()"><CODE>processRQ()</CODE></A></H2>
-<PRE>
-  $ret = $request-&gt;processRQ();</PRE>
-<P>Processes a request and returns 1 if success, undef if error.</P>
-<P>
-<HR>
-<H1><A NAME="author">AUTHOR</A></H1>
-<P>Luigino Masarati, &lt;<A HREF="mailto:lmasarati@hotmail.com">lmasarati@hotmail.com</A>&gt;</P>
-<P>
-<HR>
-<H1><A NAME="see also">SEE ALSO</A></H1>
-<P><A HREF="/Net/TFTP.html">the Net::TFTP manpage</A>.</P>
-<TABLE BORDER=0 CELLPADDING=0 CELLSPACING=0 WIDTH=100%>
-<TR><TD CLASS=block VALIGN=MIDDLE WIDTH=100% BGCOLOR="#cccccc">
-<FONT SIZE=+1><STRONG><P CLASS=block>&nbsp;Net::TFTPd - Perl extension for Trivial File Transfer Protocol Server</P></STRONG></FONT>
-</TD></TR>
-</TABLE>
+  Debug      Activates debug mode (verbose)                           0</pre>
+<p>
+</p>
+<h2><a name="callback">CallBack</a></h2>
+<p>The CallBack code is called by processRQ method for each tranferred block.</p>
+<p>The code receives (into @_ array) a reference to internal <em>$request</em> object.</p>
+<p>Example:</p>
+<pre>
+  <span class="keyword">sub</span><span class="variable"> callback
+  </span><span class="operator">{</span>
+    <span class="keyword">my</span> <span class="variable">$req</span> <span class="operator">=</span> <span class="keyword">shift</span><span class="operator">;</span>
+    <span class="keyword">printf</span> <span class="string">"block: %u\/%u\n"</span><span class="operator">,</span> <span class="variable">$req</span><span class="operator">-&gt;</span><span class="operator">{</span><span class="string">'_REQUEST_'</span><span class="operator">}{</span><span class="string">'LASTACK'</span><span class="operator">}</span><span class="operator">,</span> <span class="variable">$req</span><span class="operator">-&gt;</span><span class="operator">{</span><span class="string">'_REQUEST_'</span><span class="operator">}{</span><span class="string">'LASTBLK'</span><span class="operator">}</span><span class="operator">;</span>
+  <span class="operator">}</span>
+</pre>
+<pre>
+  <span class="keyword">my</span> <span class="variable">$tftpdOBJ</span> <span class="operator">=</span> <span class="variable">Net::TFTPd</span><span class="operator">-&gt;</span><span class="variable">new</span><span class="operator">(</span><span class="string">'RootDir'</span> <span class="operator">=&gt;</span> <span class="string">'c:/temp'</span><span class="operator">,</span> <span class="string">'Timeout'</span> <span class="operator">=&gt;</span> <span class="number">60</span><span class="operator">,</span> <span class="string">'CallBack'</span> <span class="operator">=&gt;</span> <span class="operator">\&amp;</span><span class="variable">callback</span><span class="operator">)</span> <span class="keyword">or</span> <span class="keyword">die</span> <span class="variable">Net::TFTPd</span><span class="operator">-&gt;</span><span class="variable">error</span><span class="operator">;</span>
+</pre>
+<p>
+</p>
+<hr />
+<h1><a name="listener_methods">Listener methods</a></h1>
+<p>
+</p>
+<h2><a name="waitrq__"><code>waitRQ()</code></a></h2>
+<pre>
+  <span class="variable">$request</span> <span class="operator">=</span> <span class="variable">$listener</span><span class="operator">-&gt;</span><span class="variable">waitRQ</span><span class="operator">(</span><span class="operator">[</span><span class="variable">Timeout</span><span class="operator">]</span><span class="operator">);</span>
+</pre>
+<p>Waits for a client request (RRQ or WRQ) and returns a <em>$request</em> object or <em>undef</em> if timed out.</p>
+<p>If <em>Timeout</em> is missing, the timeout defined for <em>$listener</em> object is used instead.</p>
+<p>When the method returns, the program should <code>fork()</code> and process the request invoking <code>processRQ()</code> while the parent process should re-start waiting for another request.</p>
+<p>
+</p>
+<hr />
+<h1><a name="request_methods">Request methods</a></h1>
+<p>
+</p>
+<h2><a name="processrq__"><code>processRQ()</code></a></h2>
+<pre>
+  <span class="variable">$ret</span> <span class="operator">=</span> <span class="variable">$request</span><span class="operator">-&gt;</span><span class="variable">processRQ</span><span class="operator">();</span>
+</pre>
+<p>Processes a request and returns 1 if success, undef if error.</p>
+<p>
+</p>
+<hr />
+<h1><a name="author">AUTHOR</a></h1>
+<p>Luigino Masarati, &lt;<a href="mailto:lmasarati@hotmail.com">lmasarati@hotmail.com</a>&gt;</p>
+<p>
+</p>
+<hr />
+<h1><a name="see_also">SEE ALSO</a></h1>
+<p><a href="./Net/TFTP.html">the Net::TFTP manpage</a>.</p>
 
-</BODY>
+</body>
 
-</HTML>
+</html>

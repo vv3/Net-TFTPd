@@ -8,3 +8,8 @@ Revision history for Perl extension Net::TFTPD.
 	- project revision, added examples and POD documentation
 	  first public release
 
+0.03  Mon Sep 17 07:41:00 2007
+	- some fixes, thanks to Onigiusz Zarzycki:
+	  - now work also on linux (tested on SUSE Linux 10.1)
+	  - handling TFTP transmissions with more than 65535 packets
+	  - handling TFTP transmissions with block size between 8 and 511 Bytes

@@ -8,8 +8,10 @@ use IO::Socket;
 
 require Exporter;
 
-use constant TFTP_MIN_BLKSIZE  => 512;
-use constant TFTP_MAX_BLKSIZE  => 1428;
+# modified for supporting small block sizes, O.Z. 15.08.2007
+use constant TFTP_MIN_BLKSIZE  => 8;
+use constant TFTP_DEFAULT_BLKSIZE => 512;
+use constant TFTP_MAX_BLKSIZE  => 65464;
 use constant TFTP_MIN_TIMEOUT  => 1;
 use constant TFTP_MAX_TIMEOUT  => 60;
 use constant TFTP_DEFAULT_PORT => 69;
@@ -84,7 +86,7 @@ our @EXPORT_OK = ( @{ $EXPORT_TAGS{'all'} } );
 
 our @EXPORT = qw( );
 
-our $VERSION = '0.02';
+our $VERSION = '0.03';
 
 our $LASTERROR;
 
@@ -131,8 +133,9 @@ sub new
 
 	if(my $udpserver = IO::Socket::INET->new(%params))
 	{
-		$udpserver->setsockopt(SOL_SOCKET, SO_RCVBUF, 0);
-		$udpserver->setsockopt(SOL_SOCKET, SO_SNDBUF, 0);
+#removed for using this module with IO v. 1.2301 under SUSE 10.1, O.Z. 15.08.2007
+#		$udpserver->setsockopt(SOL_SOCKET, SO_RCVBUF, 0);
+#		$udpserver->setsockopt(SOL_SOCKET, SO_SNDBUF, 0);
 
 		return bless {
 			'LocalPort'   => TFTP_DEFAULT_PORT,
@@ -142,7 +145,7 @@ sub new
 			'Readable'    => 1,
 			'Writable'    => 0,
 			'CallBack'    => undef,
-			'BlkSize'     => TFTP_MIN_BLKSIZE,
+			'BlkSize'     => TFTP_DEFAULT_BLKSIZE,
 			'Debug'       => 0,
 			%cfg,         # merge user parameters
 			'_UDPSERVER_' => $udpserver
@@ -209,7 +212,7 @@ sub waitRQ
 
 			$request->{'_REQUEST_'}{'FileName'} = shift(@datain);
 			$request->{'_REQUEST_'}{'Mode'} = uc(shift(@datain));
-			$request->{'_REQUEST_'}{'BlkSize'} = TFTP_MIN_BLKSIZE;
+			$request->{'_REQUEST_'}{'BlkSize'} = TFTP_DEFAULT_BLKSIZE;
 			$request->{'_REQUEST_'}{'LASTACK'} = 0;
 			$request->{'_REQUEST_'}{'PREVACK'} = -1;
 
@@ -429,8 +432,9 @@ sub newSOCK
 	# open socket
 	if(my $udpserver = IO::Socket::INET->new(%params))
 	{
-		$udpserver->setsockopt(SOL_SOCKET, SO_RCVBUF, 0);
-		$udpserver->setsockopt(SOL_SOCKET, SO_SNDBUF, 0);
+#removed for using this module with IO v. 1.2301 under SUSE 10.1, O.Z. 15.08.2007
+#		$udpserver->setsockopt(SOL_SOCKET, SO_RCVBUF, 0);
+#		$udpserver->setsockopt(SOL_SOCKET, SO_SNDBUF, 0);
 
 		$self->{'_UDPSERVER_'} = $udpserver;
 		return(1);
@@ -798,8 +802,11 @@ sub sendDATA
 					if($opcode eq TFTP_OPCODE_ACK)
 					{
 						# message is ACK
+                  # modified for supporting more blocks count than 65535, O.Z. 15.08.2007
 						$self->{'_REQUEST_'}{'PREVACK'} = $self->{'_REQUEST_'}{'LASTACK'};
-						$self->{'_REQUEST_'}{'LASTACK'} = unpack("n", $datain);
+                  if(int(($self->{'_REQUEST_'}{'LASTACK'}+1) % 65536) == unpack("n", $datain)){
+                    $self->{'_REQUEST_'}{'LASTACK'}++;
+                  };
 						return(1);
 					}
 					elsif($opcode eq TFTP_OPCODE_ERROR)
