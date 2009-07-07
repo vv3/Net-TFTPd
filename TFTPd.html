@@ -8,9 +8,16 @@
 </head>
 
 <body style="background-color: white">
+<table border="0" width="100%" cellspacing="0" cellpadding="3">
+<tr><td class="block" style="background-color: #cccccc" valign="middle">
+<big><strong><span class="block">&nbsp;Net::TFTPd - Perl extension for Trivial File Transfer Protocol Server</span></strong></big>
+</td></tr>
+</table>
 
-<p><a name="__index__"></a></p>
+
 <!-- INDEX BEGIN -->
+<div name="index">
+<p><a name="__index__"></a></p>
 
 <ul>
 
@@ -40,14 +47,23 @@
 	<ul>
 
 		<li><a href="#processrq__"><code>processRQ()</code></a></li>
+		<li><a href="#getfilename__"><code>getFileName()</code></a></li>
+		<li><a href="#getmode__"><code>getMode()</code></a></li>
+		<li><a href="#getblksize__"><code>getBlkSize()</code></a></li>
+		<li><a href="#getpeeraddr__"><code>getPeerAddr()</code></a></li>
+		<li><a href="#getpeerport__"><code>getPeerPort()</code></a></li>
+		<li><a href="#gettotalbytes__"><code>getTotalBytes()</code></a></li>
 	</ul>
 
+	<li><a href="#credits">CREDITS</a></li>
 	<li><a href="#author">AUTHOR</a></li>
 	<li><a href="#see_also">SEE ALSO</a></li>
 </ul>
+
+<hr name="index" />
+</div>
 <!-- INDEX END -->
 
-<hr />
 <p>
 </p>
 <h1><a name="name">NAME</a></h1>
@@ -72,12 +88,15 @@
   <span class="variable">$tftpRQ</span><span class="operator">-&gt;</span><span class="variable">processRQ</span><span class="operator">()</span>
     <span class="keyword">or</span> <span class="keyword">die</span> <span class="string">"Error processing TFTP request: %s"</span><span class="operator">,</span> <span class="variable">Net::TFTPd</span><span class="operator">-&gt;</span><span class="variable">error</span><span class="operator">;</span>
 </pre>
+<pre>
+  <span class="keyword">printf</span> <span class="string">"%u bytes has been transferred"</span><span class="operator">,</span> <span class="variable">$tftpRQ</span><span class="operator">-&gt;</span><span class="variable">getTotalBytes</span><span class="operator">()</span> <span class="operator">||</span> <span class="number">0</span><span class="operator">;</span>
+</pre>
 <p>
 </p>
 <hr />
 <h1><a name="description">DESCRIPTION</a></h1>
-<p><code>Net::TFTPd</code> is a class implementing a simple <em>Trivial File Transfer Protocol</em> server in Perl as described in RFC1350.</p>
-<p><code>Net::TFTPd</code> also supports the TFTP Option Extension (as described in RFC2347), with the following options:</p>
+<p><code>Net::TFTPd</code> is a class implementing a simple <em>Trivial File Transfer Protocol</em> server in Perl as described in <a href="http://www.ietf.org/rfc/rfc1350.txt" class="rfc">RFC1350</a>.</p>
+<p><code>Net::TFTPd</code> also supports the TFTP Option Extension (as described in <a href="http://www.ietf.org/rfc/rfc2347.txt" class="rfc">RFC2347</a>), with the following options:</p>
 <pre>
   RFC2348 TFTP Blocksize Option
   RFC2349 TFTP Timeout Interval and Transfer Size Options</pre>
@@ -179,6 +198,53 @@ options.</p>
 <p>Processes a request and returns 1 if success, undef if error.</p>
 <p>
 </p>
+<h2><a name="getfilename__"><code>getFileName()</code></a></h2>
+<pre>
+  <span class="variable">$ret</span> <span class="operator">=</span> <span class="variable">$request</span><span class="operator">-&gt;</span><span class="variable">getFileName</span><span class="operator">();</span>
+</pre>
+<p>Returns the requested file name.</p>
+<p>
+</p>
+<h2><a name="getmode__"><code>getMode()</code></a></h2>
+<pre>
+  <span class="variable">$ret</span> <span class="operator">=</span> <span class="variable">$request</span><span class="operator">-&gt;</span><span class="variable">getMode</span><span class="operator">();</span>
+</pre>
+<p>Returns the transfer mode for the request.</p>
+<p>
+</p>
+<h2><a name="getblksize__"><code>getBlkSize()</code></a></h2>
+<pre>
+  <span class="variable">$ret</span> <span class="operator">=</span> <span class="variable">$request</span><span class="operator">-&gt;</span><span class="variable">getBlkSize</span><span class="operator">();</span>
+</pre>
+<p>Returns the block size used for the transfer.</p>
+<p>
+</p>
+<h2><a name="getpeeraddr__"><code>getPeerAddr()</code></a></h2>
+<pre>
+  <span class="variable">$ret</span> <span class="operator">=</span> <span class="variable">$request</span><span class="operator">-&gt;</span><span class="variable">getPeerAddr</span><span class="operator">();</span>
+</pre>
+<p>Returns the address of the requesting client.</p>
+<p>
+</p>
+<h2><a name="getpeerport__"><code>getPeerPort()</code></a></h2>
+<pre>
+  <span class="variable">$ret</span> <span class="operator">=</span> <span class="variable">$request</span><span class="operator">-&gt;</span><span class="variable">getPeerMode</span><span class="operator">();</span>
+</pre>
+<p>Returns the port of the requesting client.</p>
+<p>
+</p>
+<h2><a name="gettotalbytes__"><code>getTotalBytes()</code></a></h2>
+<pre>
+  <span class="variable">$ret</span> <span class="operator">=</span> <span class="variable">$request</span><span class="operator">-&gt;</span><span class="variable">getTotalBytes</span><span class="operator">();</span>
+</pre>
+<p>Returns the number of bytes transferred for the request.</p>
+<p>
+</p>
+<hr />
+<h1><a name="credits">CREDITS</a></h1>
+<p>Thanks to &lt;Vince&gt; for the NETASCII support and transferred bytes patch.</p>
+<p>
+</p>
 <hr />
 <h1><a name="author">AUTHOR</a></h1>
 <p>Luigino Masarati, &lt;<a href="mailto:lmasarati@hotmail.com">lmasarati@hotmail.com</a>&gt;</p>
@@ -186,7 +252,12 @@ options.</p>
 </p>
 <hr />
 <h1><a name="see_also">SEE ALSO</a></h1>
-<p><a href="./Net/TFTP.html">the Net::TFTP manpage</a>.</p>
+<p><a href="/Net/TFTP.html">the Net::TFTP manpage</a>.</p>
+<table border="0" width="100%" cellspacing="0" cellpadding="3">
+<tr><td class="block" style="background-color: #cccccc" valign="middle">
+<big><strong><span class="block">&nbsp;Net::TFTPd - Perl extension for Trivial File Transfer Protocol Server</span></strong></big>
+</td></tr>
+</table>
 
 </body>
 

@@ -86,7 +86,7 @@ our @EXPORT_OK = ( @{ $EXPORT_TAGS{'all'} } );
 
 our @EXPORT = qw( );
 
-our $VERSION = '0.03';
+our $VERSION = '0.04';
 
 our $LASTERROR;
 
@@ -215,6 +215,8 @@ sub waitRQ
 			$request->{'_REQUEST_'}{'BlkSize'} = TFTP_DEFAULT_BLKSIZE;
 			$request->{'_REQUEST_'}{'LASTACK'} = 0;
 			$request->{'_REQUEST_'}{'PREVACK'} = -1;
+			# counter for transferred bytes
+			$request->{'_REQUEST_'}{'TotalBytes'} = 0;
 
 			if(scalar(@datain) >= 2)
 			{
@@ -248,7 +250,8 @@ sub processRQ
 
 	if(defined($self->newSOCK()))
 	{
-		if($self->{'_REQUEST_'}{'Mode'} ne 'OCTET')
+		# modified for supporting NETASCII transfers on 25/05/2009
+		if(($self->{'_REQUEST_'}{'Mode'} ne 'OCTET') && ($self->{'_REQUEST_'}{'Mode'} ne 'NETASCII'))
 		{
 			#request is not OCTET
 			$LASTERROR = sprintf "%s transfer mode is not supported\n", $self->{'_REQUEST_'}{'Mode'};
@@ -406,6 +409,77 @@ sub processRQ
 	}
 }
 
+#
+# Usage: $requestOBJ->getTotalBytes();
+# returns the number of bytes transferred by the request
+#
+sub getTotalBytes
+{
+	# the request object
+	my $self = shift;
+	
+	return $self->{'_REQUEST_'}{'TotalBytes'};
+}
+
+#
+# Usage: $requestOBJ->getFileName();
+# returns the requested file name
+#
+sub getFileName
+{
+	# the request object
+	my $self = shift;
+	
+	return $self->{'_REQUEST_'}{'FileName'};
+}
+
+#
+# Usage: $requestOBJ->getMode();
+# returns the transfer mode for the request
+#
+sub getMode
+{
+	# the request object
+	my $self = shift;
+	
+	return $self->{'_REQUEST_'}{'Mode'};
+}
+
+#
+# Usage: $requestOBJ->getPeerAddr();
+# returns the address of the requesting client
+#
+sub getPeerAddr
+{
+	# the request object
+	my $self = shift;
+	
+	return $self->{'_REQUEST_'}{'PeerAddr'};
+}
+
+#
+# Usage: $requestOBJ->getPeerPort();
+# returns the port of the requesting client
+#
+sub getPeerPort
+{
+	# the request object
+	my $self = shift;
+	
+	return $self->{'_REQUEST_'}{'PeerPort'};
+}
+
+#
+# Usage: $requestOBJ->getBlkSize();
+# returns the block size used for the transfer
+#
+sub getBlkSize
+{
+	# the request object
+	my $self = shift;
+	
+	return $self->{'_REQUEST_'}{'BlkSize'};
+}
 
 #
 # Usage: $requestOBJ->newSOCK();
@@ -554,7 +628,9 @@ sub readFILE
 	{
 		# if requested block is next block, read next block and return bytes read
 		my $fh = $self->{'_REQUEST_'}{'_FH_'};
-		my $bytes = read($fh, $$datablk, $self->{'BlkSize'});
+		# modified for supporting NETASCII transfers on 25/05/2009
+		# my $bytes = read($fh, $$datablk, $self->{'BlkSize'});
+		my $bytes = sysread($fh, $$datablk, $self->{'BlkSize'});
 		if(defined($bytes))
 		{
 			return($bytes);
@@ -619,6 +695,8 @@ sub sendFILE
 			if(defined($self->readFILE(\$datablk)))
 			{
 				# read from file successful
+				# increment the transferred bytes counter
+				$self->{'_REQUEST_'}{'TotalBytes'} += length($datablk);
 				if($self->sendDATA(\$datablk))
 				{
 					# send to socket successful
@@ -673,6 +751,8 @@ sub recvFILE
 				if(defined($udpserver->send(pack("nn", TFTP_OPCODE_ACK, $self->{'_REQUEST_'}{'LASTBLK'}))))
 				{
 					# sent ACK
+					# increment the transferred bytes counter
+					$self->{'_REQUEST_'}{'TotalBytes'} += length($datablk);
 					if(length($datablk) < $self->{'BlkSize'})
 					{
 						return(1);
@@ -1078,7 +1158,9 @@ sub sendERR
 {
 	my $self = shift;
 	my($errcode, $errmsg) = @_;
-	$errmsg or $errmsg = '';
+	# modified for supporting NETASCII transfers on 25/05/2009
+	#$errmsg or $errmsg = '';
+	$errmsg or $errmsg = $ERRORS{$errcode};
 
 	my $udpserver = $self->{'_UDPSERVER_'};
 
@@ -1123,6 +1205,8 @@ Net::TFTPd - Perl extension for Trivial File Transfer Protocol Server
 
   $tftpRQ->processRQ()
     or die "Error processing TFTP request: %s", Net::TFTPd->error;
+
+  printf "%u bytes has been transferred", $tftpRQ->getTotalBytes() || 0;
 
 =head1 DESCRIPTION
 
@@ -1221,6 +1305,46 @@ When the method returns, the program should fork() and process the request invok
 
 Processes a request and returns 1 if success, undef if error.
 
+=head2 getFileName()
+
+  $ret = $request->getFileName();
+
+Returns the requested file name.
+
+=head2 getMode()
+
+  $ret = $request->getMode();
+
+Returns the transfer mode for the request.
+
+=head2 getBlkSize()
+
+  $ret = $request->getBlkSize();
+
+Returns the block size used for the transfer.
+
+=head2 getPeerAddr()
+
+  $ret = $request->getPeerAddr();
+
+Returns the address of the requesting client.
+
+=head2 getPeerPort()
+
+  $ret = $request->getPeerMode();
+
+Returns the port of the requesting client.
+
+=head2 getTotalBytes()
+
+  $ret = $request->getTotalBytes();
+
+Returns the number of bytes transferred for the request.
+
+=head1 CREDITS
+
+Thanks to E<lt>VinceE<gt> for the NETASCII support and transferred bytes patch.
+
 =head1 AUTHOR
 
 Luigino Masarati, E<lt>lmasarati@hotmail.comE<gt>
@@ -1230,3 +1354,4 @@ Luigino Masarati, E<lt>lmasarati@hotmail.comE<gt>
 L<Net::TFTP>.
 
 =cut
+

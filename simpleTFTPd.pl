@@ -1,6 +1,6 @@
 #!/usr/bin/perl
 use strict;
-use Net::TFTPd 0.03 qw(%OPCODES);
+use Net::TFTPd 0.04 qw(%OPCODES);
 
 # change ROOTDIR to your TFTP root directory
 my $rootdir = $ARGV[0];
@@ -35,12 +35,12 @@ printf "TFTP listener is bound to %s:%d\nTFTP listener is waiting %d seconds for
 if(my $request = $listener->waitRQ())
 {
 	# received request
-	printf "Received a %s for file '%s'\n", $OPCODES{$request->{'_REQUEST_'}{'OPCODE'}}, $request->{'_REQUEST_'}{'FileName'};
+	printf "Received a %s for file '%s'\n", $OPCODES{$request->{'_REQUEST_'}{'OPCODE'}}, $request->getFileName();
 
 	# process the request
 	if($request->processRQ())
 	{
-		print "OK, transfer completed successfully\n";
+		printf "OK, transfer completed successfully for file %s, %u bytes transferred\n", $request->getFileName(), $request->getTotalBytes();
 	}
 	else
 	{
