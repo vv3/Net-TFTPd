@@ -50,6 +50,7 @@
 		<li><a href="#getfilename__"><code>getFileName()</code></a></li>
 		<li><a href="#getmode__"><code>getMode()</code></a></li>
 		<li><a href="#getblksize__"><code>getBlkSize()</code></a></li>
+		<li><a href="#server__"><code>server()</code></a></li>
 		<li><a href="#getpeeraddr__"><code>getPeerAddr()</code></a></li>
 		<li><a href="#getpeerport__"><code>getPeerPort()</code></a></li>
 		<li><a href="#gettotalbytes__"><code>getTotalBytes()</code></a></li>
@@ -155,7 +156,14 @@ options.</p>
   Writable   Clients are allowed to write files                       0
   BlkSize    Minimum blocksize to negotiate for transfers           512
   CallBack   Reference to code executed for each transferred block    -
-  Debug      Activates debug mode (verbose)                           0</pre>
+  Debug      Activates debug mode (verbose)                           0
+  Family     Address family IPv4/IPv6                              IPv4
+               Valid values for IPv4:
+                 4, v4, ip4, ipv4, AF_INET (constant)
+               Valid values for IPv6:
+                 6, v6, ip6, ipv6, AF_INET6 (constant)</pre>
+<p><strong>NOTE</strong>:  IPv6 requires <strong>IO::Socket::IP</strong>.  Failback is <strong>IO::Socket::INET</strong> 
+and only IPv4 support.</p>
 <p>
 </p>
 <h2><a name="callback">CallBack</a></h2>
@@ -219,6 +227,14 @@ options.</p>
 <p>Returns the block size used for the transfer.</p>
 <p>
 </p>
+<h2><a name="server__"><code>server()</code></a></h2>
+<pre>
+  <span class="variable">$ret</span> <span class="operator">=</span> <span class="variable">$request</span><span class="operator">-&gt;</span><span class="variable">server</span><span class="operator">();</span>
+</pre>
+<p>Return <strong>IO::Socket::*</strong> object for the created server.  
+All <strong>IO::Socket::*</strong> accessors can then be called.</p>
+<p>
+</p>
 <h2><a name="getpeeraddr__"><code>getPeerAddr()</code></a></h2>
 <pre>
   <span class="variable">$ret</span> <span class="operator">=</span> <span class="variable">$request</span><span class="operator">-&gt;</span><span class="variable">getPeerAddr</span><span class="operator">();</span>
@@ -242,7 +258,7 @@ options.</p>
 </p>
 <hr />
 <h1><a name="credits">CREDITS</a></h1>
-<p>Thanks to &lt;Vince&gt; for the NETASCII support and transferred bytes patch.</p>
+<p>Thanks to Michael Vincent (&lt;VINSWORLD&gt;) for the NETASCII support, transferred bytes and IPv6 patches.</p>
 <p>
 </p>
 <hr />

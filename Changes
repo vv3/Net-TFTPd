@@ -15,8 +15,14 @@ Revision history for Perl extension Net::TFTPD.
 	  - handling TFTP transmissions with block size between 8 and 511 Bytes
 
 0.04  Mon May 25 15:00:00 2009
-	- some fixes, thanks to Vince
+	- some fixes, thanks to Michael Vincent
 	  - support for NETASCII transfer mode
 	  - added $request->getTotalBytes() method to retrieve the number
 	    of bytes transferred for the request
 	  - added various other request methods
+
+0.05  Thu Oct 11 09:30:00 2012
+	- some changes, thanks again to Michael Vincent
+	  - Changed to optional IO::Socket::IP and enabled IPv6 support, with
+	    failback to IP::Socket::INET
+	  - Added a server() accessor.

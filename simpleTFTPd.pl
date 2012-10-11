@@ -1,6 +1,6 @@
 #!/usr/bin/perl
 use strict;
-use Net::TFTPd 0.04 qw(%OPCODES);
+use Net::TFTPd 0.05 qw(%OPCODES);
 
 # change ROOTDIR to your TFTP root directory
 my $rootdir = $ARGV[0];

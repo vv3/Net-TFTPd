@@ -1,4 +1,4 @@
-Net/TFTPD version 0.03
+Net/TFTPD version 0.05
 ======================
 
 INSTALLATION
@@ -11,7 +11,7 @@ To install this module type the following:
 
 COPYRIGHT AND LICENCE
 
-Copyright (C) 2002-2009 Luigino Masarati
+Copyright (C) 2002-2012 Luigino Masarati
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself. 
