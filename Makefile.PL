@@ -4,7 +4,7 @@ use ExtUtils::MakeMaker;
 WriteMakefile(
     'NAME'		=> 'Net::TFTPd',
     'VERSION_FROM'	=> 'TFTPd.pm', # finds $VERSION
-    'BINARY_LOCATION' => 'Net-TFTPd-0.05.tar.gz',
+    'BINARY_LOCATION' => 'Net-TFTPd-0.06.tar.gz',
     'PREREQ_PM'		=> {}, # e.g., Module::Name => 1.1
     ($] >= 5.005 ?    ## Add these new keywords supported since 5.005
       (ABSTRACT_FROM => 'TFTPd.pm', # retrieve abstract from module

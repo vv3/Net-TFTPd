@@ -26,3 +26,7 @@ Revision history for Perl extension Net::TFTPD.
 	  - Changed to optional IO::Socket::IP and enabled IPv6 support, with
 	    failback to IP::Socket::INET
 	  - Added a server() accessor.
+
+0.06  Wed Oct 17 11:13:00 2012
+	- fix, thanks again to Michael Vincent: now supporting also Socket.pm
+	  version which doesn't support IPv6

@@ -6,7 +6,8 @@ use strict;
 use warnings;
 
 # modified by M.Vincent for IPv6 support
-use Socket qw(AF_INET AF_INET6 SO_ERROR);
+use Socket qw(AF_INET SO_ERROR);
+my $AF_INET6 = eval { Socket::AF_INET6() };
 my $HAVE_IO_Socket_IP = 0;
 eval "use IO::Socket::IP -register";
 if (!$@)
@@ -98,7 +99,7 @@ our @EXPORT_OK = ( @{ $EXPORT_TAGS{'all'} } );
 
 our @EXPORT = qw( );
 
-our $VERSION = '0.05';
+our $VERSION = '0.06';
 
 our $LASTERROR;
 
@@ -140,7 +141,7 @@ sub new
 	# modified by M.Vincent for IPv6 support
 	if (defined($cfg{'Family'}))
 	{
-		if ($cfg{'Family'} =~ /^(?:(?:(:?ip)?v?(?:4|6))|${\AF_INET}|${\AF_INET6})$/)
+		if ($cfg{'Family'} =~ /^(?:(?:(:?ip)?v?(?:4|6))|${\AF_INET}|$AF_INET6)$/)
 		{
 			if ($cfg{'Family'} =~ /^(?:(?:(:?ip)?v?4)|${\AF_INET})$/)
 			{
@@ -153,7 +154,7 @@ sub new
 					$LASTERROR = "IO::Socket::IP required for IPv6";
 					return (undef);
 				}
-				$params{'Family'} = AF_INET6;
+				$params{'Family'} = $AF_INET6;
 			}
 		}
 		else
