@@ -174,6 +174,12 @@ sub new
 		$params{'LocalAddr'} = $cfg{'LocalAddr'};
 	}
 
+	# bind only to IPv6
+	if ($cfg{'V6Only'})
+	{
+		$params{'V6Only'} = $cfg{'V6Only'};
+	}
+
 	if ($HAVE_IO_Socket_IP)
 	{
 		if (my $udpserver = IO::Socket::IP->new(%params))
@@ -1342,6 +1348,7 @@ Valid options are:
   Option     Description                                        Default
   ------     -----------                                        -------
   LocalAddr  Interface to bind to (for multi-homed server)          any
+  V6Only     If set, listen only on AF_INET6 addresses            undef
   LocalPort  Port to bind server to                                  69
   Timeout    Timeout in seconds to wait for a request                10
   ACKtimeout Timeout in seconds to wait for an ACK packet             4
